@@ -21,8 +21,8 @@ app.get("/", function (req, res) {
 
 app.get("/api", function (req, res) {
   res.json({
-    unix: Math.floor(new Date.now().getTime()),
-    utc: new Date.now().toUTCString()
+    unix: Math.floor(new Date()),
+    utc: new Date().toUTCString()
   })
 })
 
@@ -31,38 +31,27 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-// app.get("/api/:date", function (req, res) {
-//   let input = req.params.date;
+app.get("/api/:date", function (req, res) {
+  let inputInString = req.params.date;
+  let inputInDate = new Date(inputInString);
 
-//   console.log(typeof(input))
+  console.log(typeof(inputInString)) // string
+  console.log(typeof(inputInDate)) // object
+  console.log(isNaN(inputInDate))
 
-//   if (typeof(input) == 'number') {
-//     res.json({
-//       unix: input,
-//       utc: new Date(input).toUTCString()
-//     })
-//   } else if (typeof(input) == 'string') {
-//     res.json({
-//       unix: Math.floor(new Date(req.params.date).getTime()),
-//       utc: new Date(req.params.date).toUTCString()
-//     })
-//   } else if (typeof(input) == 'null') {
-//     res.json({
-//       unix: Math.floor(new Date.now().getTime()),
-//       utc: new Date.now().toUTCString()
-//     })
-//   } else if (typeof(input) == 'undefined') {
-//     res.json({
-//       error: "Invalid Date"
-//     })
-//   }
-// })
+  if (isNaN(inputInDate) === false) {
+    res.json({
+      unix: inputInString,
+      utc: inputInDate.toUTCString()
+    })
+  } else if (isNaN(inputInDate) === true) {
+    res.json({
+      error: "Invalid Date"
+    })
+  }
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
-
-// app.listen(process.env.PORT, function () {
-//   console.log('Your app is listening on port ' + process.env.PORT);
-// });
