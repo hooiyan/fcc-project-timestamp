@@ -41,17 +41,12 @@ app.get("/api/:date", function (req, res) {
 
   if (isNaN(inputInDate) === false) {
     res.json({
-      unix: inputInString,
+      unix: Math.floor(new Date(inputInString).getTime()),
       utc: inputInDate.toUTCString()
     })
   } else if (isNaN(inputInDate) === true) {
     res.json({
       error: "Invalid Date"
-    })
-  } else {
-    res.json({
-      unix: Math.floor(new Date(req.params.date).getTime()),
-      utc: new Date(req.params.date).toUTCString()
     })
   }
 })
