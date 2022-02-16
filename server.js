@@ -19,6 +19,7 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+// if the date parameter is empty, it will reach this route instead
 app.get("/api", function (req, res) {
   res.json({
     unix: Math.floor(new Date()),
@@ -26,20 +27,16 @@ app.get("/api", function (req, res) {
   })
 })
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
-
 app.get("/api/:date", function (req, res) {
   let inputInString = req.params.date;
-  let inputInDate = new Date(inputInString);
+  let inputInDate = new Date(req.params.date);
 
-  console.log(typeof(inputInString)) // string
-  console.log(typeof(inputInDate)) // object
-  console.log(isNaN(inputInDate))
-
-  if (isNaN(inputInDate) === false) {
+  if (Number(inputInString)) {
+    res.json({
+      unix: inputInString,
+      utc: new Date(Number(inputInString)).toUTCString()
+    })
+  } else if (isNaN(inputInDate) === false) {
     res.json({
       unix: Math.floor(new Date(inputInString).getTime()),
       utc: inputInDate.toUTCString()
